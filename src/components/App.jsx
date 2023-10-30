@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Searchbar from './Serchbar/Serchbar';
 
 class App extends Component {
   state = {
@@ -10,6 +11,19 @@ class App extends Component {
     selectedImage: null,
     prevQuery: '',
   };
+
+  componentDidUpdate(_, prevState) {
+    const { query, page, images } = this.state;
+    if (prevState.query !== query || prevState.page !== page) {
+      this.fetchImages();
+    } else if (
+      prevState.images.length !== images.length &&
+      prevState.images.length !== 0
+    ) {
+      this.scrollToBottom();
+    }
+  }
+
   // API REQUEST
   fetchImages = async () => {
     const { query, page } = this.state;
@@ -43,6 +57,31 @@ class App extends Component {
       this.setState({ isLoading: false });
     }
   };
+  //SCROLL TO BOTTOM
+  scrollToBottom = () => {
+    let currentScrollPosition = window.scrollY;
+    let targetScrollPosition = document.body.scrollHeight - window.innerHeight;
+    let scrollStep = Math.round(
+      (targetScrollPosition - currentScrollPosition) / 20
+    );
+
+    const smoothScroll = () => {
+      currentScrollPosition += scrollStep;
+      window.scrollTo(0, currentScrollPosition);
+
+      if (currentScrollPosition < targetScrollPosition) {
+        window.requestAnimationFrame(smoothScroll);
+      }
+    };
+
+    window.requestAnimationFrame(smoothScroll);
+  };
+  //SEARCHBAR
+  handleSearch = query => {
+    if (query !== this.state.prevQuery) {
+      this.setState({ query, images: [], page: 1, prevQuery: query });
+    }
+  };
 
   render() {
     return (
@@ -56,7 +95,7 @@ class App extends Component {
           color: '#010101',
         }}
       >
-        React homework template
+        <Searchbar onSubmit={this.handleSearch} />
       </div>
     );
   }
