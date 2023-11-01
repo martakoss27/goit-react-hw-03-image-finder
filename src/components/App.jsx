@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Searchbar from './Serchbar/Serchbar';
+import ImageGallery from './ImageGallery/ImageGallery';
 
 class App extends Component {
   state = {
@@ -82,20 +83,18 @@ class App extends Component {
       this.setState({ query, images: [], page: 1, prevQuery: query });
     }
   };
+  //CLICK ON IMAGE
+  handleImageClick = image => {
+    this.setState({ showModal: true, selectedImage: image });
+  };
 
   render() {
+    const { images, isLoading, showModal, selectedImage } = this.state;
+
     return (
-      <div
-        style={{
-          height: '100vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: 40,
-          color: '#010101',
-        }}
-      >
+      <div>
         <Searchbar onSubmit={this.handleSearch} />
+        <ImageGallery images={images} onImageClick={this.handleImageClick} />
       </div>
     );
   }
