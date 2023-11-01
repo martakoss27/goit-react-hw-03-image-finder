@@ -3,6 +3,7 @@ import Searchbar from './Serchbar/Serchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
 import Loader from './Loader/Loader';
+import Modal from './Modal/Modal';
 
 class App extends Component {
   state = {
@@ -95,6 +96,11 @@ class App extends Component {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
+  //MODAL CLOSE
+  closeModal = () => {
+    this.setState({ showModal: false, selectedImage: null });
+  };
+
   render() {
     const { images, isLoading, showModal, selectedImage } = this.state;
 
@@ -106,6 +112,7 @@ class App extends Component {
         {images.length > 0 && !isLoading && (
           <Button onClick={this.handleLoadMore}>Load more</Button>
         )}
+        {showModal && <Modal image={selectedImage} onClose={this.closeModal} />}
       </div>
     );
   }
