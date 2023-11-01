@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Searchbar from './Serchbar/Serchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
+import Button from './Button/Button';
+import Loader from './Loader/Loader';
 
 class App extends Component {
   state = {
@@ -83,9 +85,14 @@ class App extends Component {
       this.setState({ query, images: [], page: 1, prevQuery: query });
     }
   };
-  //CLICK ON IMAGE
+  //CLICK ON IMAGE(MODAL OPEN)
   handleImageClick = image => {
     this.setState({ showModal: true, selectedImage: image });
+  };
+
+  //LOAD MORE
+  handleLoadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   render() {
@@ -95,6 +102,10 @@ class App extends Component {
       <div>
         <Searchbar onSubmit={this.handleSearch} />
         <ImageGallery images={images} onImageClick={this.handleImageClick} />
+        {isLoading && <Loader />}
+        {images.length > 0 && !isLoading && (
+          <Button onClick={this.handleLoadMore}>Load more</Button>
+        )}
       </div>
     );
   }
